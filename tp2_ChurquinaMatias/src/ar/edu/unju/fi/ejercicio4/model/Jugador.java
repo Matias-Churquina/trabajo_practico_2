@@ -27,8 +27,9 @@ public class Jugador {
 	
 	@Override
 	public String toString() {
-		return "Jugador [nombre=" + nombre + ", apellido=" + apellido + ", fechaNac=" + fechaNac + ", nacionalidad="
-				+ nacionalidad + ", estatura=" + estatura + ", peso=" + peso + ", posicion=" + posicion + "]";
+		return "Jugador [Nombre=" + nombre + ", Apellido=" + apellido + ",Edad=" + calcularEdad(fechaNac)
+				+ ",Fecha de Nacimiento=" + fechaNac + ", Nacionalidad="
+				+ nacionalidad + ", Estatura=" + estatura + ", Peso=" + peso + ", Posicion=" + posicion + "]";
 	}
 
 	public Jugador(String nombre, String apellido, LocalDate fechaNac, String nacionalidad, double estatura,

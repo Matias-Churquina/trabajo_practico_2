@@ -47,26 +47,35 @@ public class Main {
 			}while(op != 5);
 			sc.close();
 		}
-	
-	public static Posicion selecPosicion() {
-		while(true) {
-			try {
-				System.out.println("    Elija posicion del jugador  ");
-				System.out.println("1 - Defensa ");
-				System.out.println("2 - Medio");
-				System.out.println("3 - Defensa ");
-				System.out.println("4 - Arquero");;
-				System.out.print("  Ingrese una opción: ");
-				System.out.println();
-				System.out.println("=================================");
-				Posicion[] valPos = Posicion.values();
-				Posicion pos = valPos[sc.nextInt()-1];
-				return pos;
-			}catch(Exception e) {
-				System.out.println("ERROR. Debe ingresar una opción de acuerdo a la posición.");
+		/**
+		 * Propósito: Muestra al usuario un serie de posiciones que deberá elegir de acuerdo
+		 * al número asigando a cada una. Este devuelve un objeto de enum.
+		 * 
+		 */
+		public static Posicion selecPosicion() {
+			while(true) {
+				try {
+					System.out.println("    Elija posicion del jugador  ");
+					System.out.println("1 - Delantero ");
+					System.out.println("2 - Medio");
+					System.out.println("3 - Defensa ");
+					System.out.println("4 - Arquero");;
+					System.out.print("  Ingrese una opción: ");
+					System.out.println();
+					System.out.println("=================================");
+					Posicion[] valPos = Posicion.values();
+					Posicion pos = valPos[sc.nextInt()-1];
+					return pos;
+				}catch(Exception e) {
+					System.out.println("ERROR. Debe ingresar una opción de acuerdo a la posición.");
+				}
 			}
 		}
-	}
+		/**
+		 * Propósito: El siguiente módulo solicita al usuario que ingrese los datos de
+		 * un jugador para poder cargarlo. Despues de asignados los datos a un objeto 
+		 * jugador este es cargado a un array de jugadores.		 * 
+		 */
 		public static void altaJugadores() {
 			if(jugadores == null) {
 				jugadores = new ArrayList<>();
@@ -112,6 +121,11 @@ public class Main {
 			j.setPosicion(selecPosicion());
 			jugadores.add(j);
 		}
+		/**
+		 * Propósito: Este módulo muestra de manera itertiva los datos de cada uno de los
+		 * jugadores cargados en la lista o array.
+		 * 
+		 */
 		public static void mostrarJugadores() {
 			if(jugadores != null) {
 				System.out.println("===== Jugadores =====");
@@ -120,6 +134,13 @@ public class Main {
 				System.out.println("ERROR. La lista está vacía.");
 			}
 		}
+		/**
+		 * Propósito: Busca un jugador de manera iterativa, por medio una coincidencia
+		 * con los parámetros recibidos en el llamado al módulo. Al final devuelve un
+		 * objeto jugador si existe alguna coincidencia de otra forma solo devuelve
+		 * un valor nulo. 
+		 * 
+		 */
 		public static Jugador buscarJugador(String nombre, String apellido) {
 			Jugador Encontrado = null;
 			for(Jugador jugador: jugadores) {
@@ -130,7 +151,11 @@ public class Main {
 			}
 			return Encontrado;
 		}
-		
+		/**
+		 * Propósito: El siguiente módulo solicita al usuario nombre y apellido de un
+		 * jugador para poder buscarlo y modificar su posición.
+		 * 
+		 */
 		public static void modificarJugador() {
 			System.out.println("===== Modificar jugadores =====");
 			System.out.print("- Ingrese nombre de jugador a modificar: ");
@@ -144,13 +169,17 @@ public class Main {
 				System.out.println("ERROR. Jugador no encontrado.");
 			}
 		}
-		
+		/**
+		 * Propósito: El siguiente módulo solicita al usuario nombre y apellido de un
+		 * jugador para poder buscarlo y depúes eliminarlo de la lista si lo encuentra.
+		 * 
+		 */
 		public static void eliminarJugador() {
 			boolean band = false;
 			System.out.println("===== Eliminar jugadores =====");
-			System.out.println("- Ingrese nombre de jugador a eliminar: ");
+			System.out.print("- Ingrese nombre de jugador a eliminar: ");
 			String nombreM = sc.next();
-			System.out.println("- Ingrese apellido de jugador a eliminar: ");
+			System.out.print("- Ingrese apellido de jugador a eliminar: ");
 			String apellidoM = sc.next();
 			Iterator<Jugador> iterator = jugadores.iterator();
 			while(iterator.hasNext()) {
