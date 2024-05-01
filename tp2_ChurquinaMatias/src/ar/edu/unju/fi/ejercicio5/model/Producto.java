@@ -19,6 +19,14 @@ public class Producto {
 	public Producto() {
 		// TODO Auto-generated constructor stub
 	}
+	
+
+	@Override
+	public String toString() {
+		return "Producto [codigo=" + codigo + ", descripcion=" + descripcion + ", precioUnit=" + precioUnit
+				+ ", origenFab=" + origenFab + ", categoria=" + categoria + ", stock=" + stock + "]";
+	}
+
 
 	public Producto(Integer codigo, String descripcion, double precioUnit, OrigenFab origenFab, Categoria categoria,
 			boolean stock) {

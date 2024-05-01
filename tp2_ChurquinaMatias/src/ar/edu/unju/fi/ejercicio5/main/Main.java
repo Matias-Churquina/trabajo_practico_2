@@ -1,10 +1,12 @@
 package ar.edu.unju.fi.ejercicio5.main;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import ar.edu.unju.fi.ejercicio5.model.PagoEfectivo;
+import ar.edu.unju.fi.ejercicio5.model.PagoTarjeta;
 import ar.edu.unju.fi.ejercicio5.model.Producto;
 import ar.edu.unju.fi.ejercicio5.model.Producto.OrigenFab;
 import ar.edu.unju.fi.ejercicio5.model.Producto.Categoria;
@@ -116,7 +118,8 @@ public class Main {
 				p.setOrigenFab(pais);
 				break;
 			}catch(Exception e) {
-					System.out.println("ERROR. Debe ingresar una opción de acuerdo al país.");
+					System.out.println("ERROR. Debe ingresar una opción de acuerdo "
+							+ "al país.");
 			}
 			}
 			while(true) {
@@ -127,11 +130,21 @@ public class Main {
 			    p.setCategoria(categ);
 			    break;
 			}catch(Exception e) {
-					System.out.println("ERROR. Debe ingresar una opción de acuerdo a la categoria.");
+					System.out.println("ERROR. Debe ingresar una opción de acuerdo"
+							+ " a la categoria.");
 			}
 			}
-			System.out.print("Ingrese si hay stock (true) o no (false): ");
-			p.setStock(sc.nextBoolean());
+			while(true) {
+				try {
+					System.out.print("Ingrese si hay stock (true) o no (false): ");
+					p.setStock(sc.nextBoolean());
+					break;
+				}catch(Exception e) {
+					System.out.println("ERROR. Debe ingresar 'true' si hay stock, de lo"
+							+ "contario debe ingresar 'false'.");
+					sc.nextLine();
+				}
+			}
 		    productos.add(p);
 		    System.out.println("Producto agregado correctamente.");
 		}
@@ -149,6 +162,10 @@ public class Main {
 			System.out.println("ERROR. La lista está vacía.");
 		}
 	}
+	/**
+	 * Propósito: Este módulo busca de forma iterativa alguna coincidencia
+	 * de algún productp con el nombre pasado por parámetro. 
+	 */
 	public static Producto  buscarProducto(String nombre) {
 		Producto Encontrado = null;
 		for(Producto nombre1: productos) {
@@ -159,6 +176,10 @@ public class Main {
 		}
 		return Encontrado;
 	}
+	/**
+	 * Propósito: El siguiente módulo muestra al usuario opciones de pago e imprime
+	 * una factura de acuerdo al opción elejida. 
+	 */
 	public static void pagar(double monto) {
 		System.out.println("1 - Pago en efectivo");
 		System.out.println("2 - Pago con tarjeta");
@@ -167,9 +188,24 @@ public class Main {
 		if(pago == 1) {
 			PagoEfectivo efectivo = new PagoEfectivo();
 			efectivo.realizarPago(monto);
-			
+			efectivo.setFechaPago(LocalDate.now());
+			System.out.println("===== Factura =====");
+			efectivo.imprimirRecibo();
+		}else {
+			PagoTarjeta tarjeta = new PagoTarjeta();
+			System.out.print("Ingrese número de la tarjeta: ");
+			tarjeta.setNumeroTarjeta(sc.nextInt());
+			tarjeta.realizarPago(monto);
+			tarjeta.setFechaPago(LocalDate.now());
+			System.out.println("===== Factura =====");
+			tarjeta.imprimirRecibo();
 		}
 	}
+	/**
+	 * Propósito: Este módulo solicita al usuario la cantidad de productos que
+	 * decea comprar y verfica si estos tiene stock o no, si lo tiene se suman
+	 * para obtener el costo total y se agregan a su carro de compras. 
+	 */
 	public static void realizarCompra(){
 		System.out.println("===== Realizar compra =====");
 		System.out.println("Ingrese la cantidad de productos que decea comprar: ");
@@ -179,14 +215,23 @@ public class Main {
 		do {
 			System.out.println("   Producto " + i );
 			System.out.print("Ingrese nombre del producto: ");
-			Producto prod = buscarProducto(sc.next());
+			String busc = sc.next();
+			Producto prod = buscarProducto(busc);
 			if(prod != null) {
-				monto = monto + prod.getPrecioUnit();
-				prodCompra.add(prod);
-				System.out.println("El producto se agrego al carro.");
+				if (prod.isStock()) {
+					monto = monto + prod.getPrecioUnit();
+					if(prodCompra == null) {
+						prodCompra = new ArrayList<>();
+					}
+					prodCompra.add(prod);
+					System.out.println("El producto se agrego al carro.");
+				}else {
+					System.out.println("El producto no tiene stock.");
+				}
 			}else {
 				System.out.println("ERROR. No se encontró el producto."); //crear Exception
 			}
+			i++;
 		}while(i<=cant);
 		pagar(monto);
 	}

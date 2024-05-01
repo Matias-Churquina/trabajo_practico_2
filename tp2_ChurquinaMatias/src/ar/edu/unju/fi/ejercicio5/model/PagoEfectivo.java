@@ -1,6 +1,7 @@
 package ar.edu.unju.fi.ejercicio5.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import ar.edu.unju.fi.ejercicio5.interfaces.Pago;
 
@@ -22,7 +23,8 @@ public class PagoEfectivo implements Pago {
 		this.setMontoPago(monto - monto * 0.10);
 	}
 	public void imprimirRecibo(){
-		System.out.println("Fecha de pago: " + fechaPago);
+		DateTimeFormatter fecha = DateTimeFormatter.ofPattern("dd/MM/yy"); 
+		System.out.println("Fecha de pago: " + fechaPago.format(fecha));
 		System.out.println("Monto pagado: " + montoPago);
 	}
 
