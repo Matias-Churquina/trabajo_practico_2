@@ -13,7 +13,7 @@ public class Producto {
 		ARGENTINA, CHINA, BRASIL, URUGUAY;
 	}
 	public enum Categoria{
-		TELEFONIA, INFORMATIVA, ELECTROHOGAR, HERRAMIENTAS;
+		TELEFONIA, INFORMATICA, ELECTROHOGAR, HERRAMIENTAS;
 	}
 	
 	public Producto() {
