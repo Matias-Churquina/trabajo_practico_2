@@ -1,8 +1,13 @@
 package ar.edu.unju.fi.ejercicio7.main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import ar.edu.unju.fi.ejercicio5.model.Producto;
 import ar.edu.unju.fi.ejercicio5.model.Producto.Categoria;
@@ -32,21 +37,22 @@ public class Main {
 			sc.nextLine();
 		    switch (op) {
 		     	case 1:
+		     		mostrarProdStock();
 		     		break;
 		     	case 2:
-		     		
+		     		mostrarProdSinStock();
 		     		break;
 		     	case 3:
-		     		
+		     		incrementar();
 		     		break;
 		     	case 4:
-		     		
+		     		mostrarProdElectroHogar();
 		     		break;
 		     	case 5:
-		
+		     		ordenarProd();
 		     		break;
 		     	case 6:
-		
+		     		mostarNombresMayus();
 		     		break;
 		     	case 7:
 		     		System.out.println(" --- FIN DEL PROGRAMA  ---");
@@ -57,42 +63,7 @@ public class Main {
 		}while( op != 7 );
 				
 	}
-	/**
-	 * Propósito: Este módulo muestra un menú por consola para que el
-	 * usuario pueda elegir un pais de acuerdo a su número asignado.
-	 * 
-	 */
-	public static int opPais() {
-		int op = 0;
-		System.out.println("    Elija su origen de fabricación ");
-		System.out.println("1 - Argentina");
-		System.out.println("2 - China");
-		System.out.println("3 - Brasil ");
-		System.out.println("4 - Uruguay");;
-		System.out.print("  Ingrese una opción: ");
-		System.out.println();
-		System.out.println("=================================");
-		op = sc.nextInt();
-		return op;
-	}
-	/**
-	 * Propósito: Este módulo muestra un menú por consola para que el
-	 * usuario pueda elegir una categoria de acuerdo a su número asignado.
-	 * 
-	 */
-	public static int opCategoria() {
-		int op = 0;
-		System.out.println("    Elija su categoría =====");
-		System.out.println("1 - Telefonía");
-		System.out.println("2 - Informática");
-		System.out.println("3 - Electro hogar ");
-		System.out.println("4 - Herramientas");;
-		System.out.print("  Ingrese una opción: ");
-		System.out.println();
-		System.out.println("======================");
-		op = sc.nextInt();
-		return op;
-	}
+	
 	/**
 	 * Propósito: Este módulo crea un nuevo objeto Producto solicitando
 	 * por consola al usuario los datos del producto.
@@ -100,65 +71,75 @@ public class Main {
 	 * 
 	 */
 	public static void precargaProducto() {
-		if(productos == null) {
-			productos = new ArrayList<>();
-		}
-		for(int i=1; i<=15; i++) {
-			Producto p = new Producto();
-			System.out.println("===== Nuevo Producto =====");
-			System.out.print("Ingrese código del producto: ");
-			p.setCodigo(sc.nextInt());
-			sc.nextLine();
-			System.out.print("Ingrese descripción: ");
-			p.setDescripcion(sc.nextLine());
-			while(true) {
-				try {
-					System.out.print("Ingrese precio unitario: ");
-					p.setPrecioUnit(sc.nextDouble());
-					break;
-				}catch(Exception e) {
-					System.out.println("Debe usar coma ',' como separador decimal.");
-					sc.nextLine();
-				}
-			}
-			while(true) {
-			try {
-				int o = opPais();
-				OrigenFab[] valPais = OrigenFab.values();
-				OrigenFab pais = valPais[o-1];
-				p.setOrigenFab(pais);
-				break;
-			}catch(Exception e) {
-					System.out.println("ERROR. Debe ingresar una opción de acuerdo "
-							+ "al país.");
-			}
-			}
-			while(true) {
-			try {
-			 	int c = opCategoria();
-			    Categoria[] valCat = Categoria.values();
-			    Categoria categ = valCat[c-1];
-			    p.setCategoria(categ);
-			    break;
-			}catch(Exception e) {
-					System.out.println("ERROR. Debe ingresar una opción de acuerdo"
-							+ " a la categoria.");
-			}
-			}
-			while(true) {
-				try {
-					System.out.print("Ingrese si hay stock (true) o no (false): ");
-					p.setStock(sc.nextBoolean());
-					break;
-				}catch(Exception e) {
-					System.out.println("ERROR. Debe ingresar 'true' si hay stock, de lo"
-							+ "contario debe ingresar 'false'.");
-					sc.nextLine();
-				}
-			}
-		    productos.add(p);
-		    System.out.println("Producto agregado correctamente.");
+		productos = new ArrayList<>();
+		if(productos.isEmpty()) {
+			productos.add(new Producto(101, "Monitor Asus 24'", 150000, OrigenFab.CHINA, Categoria.INFORMATICA, true));
+			productos.add(new Producto(102, "Notebook Noblex 15'", 660000, OrigenFab.ARGENTINA, Categoria.INFORMATICA, true));
+			productos.add(new Producto(103, "Teclado Gammer Soul", 57999, OrigenFab.CHINA, Categoria.INFORMATICA, true));
+			productos.add(new Producto(104, "Procesador Intel i7", 405222, OrigenFab.BRASIL, Categoria.INFORMATICA, false));
+			productos.add(new Producto(105, "Lavarropa Dream Next", 506000, OrigenFab.CHINA, Categoria.ELECTROHOGAR, true));
+			productos.add(new Producto(106, "Heladera Samsung Inverter", 150000, OrigenFab.URUGUAY, Categoria.ELECTROHOGAR, true));
+			productos.add(new Producto(107, "Aire Acondicionado Philco", 456519, OrigenFab.ARGENTINA, Categoria.ELECTROHOGAR, false));
+			productos.add(new Producto(108, "Smart Tv LG 65'", 999999, OrigenFab.BRASIL, Categoria.ELECTROHOGAR, true));
+			productos.add(new Producto(109, "Celular Samsung A23", 430000, OrigenFab.URUGUAY, Categoria.TELEFONIA, true));
+			productos.add(new Producto(110, "Celular Xiaomi Redmi 12c", 299999, OrigenFab.CHINA, Categoria.TELEFONIA, true));
+			productos.add(new Producto(111, "Celular LG K52  ", 169500, OrigenFab.ARGENTINA, Categoria.TELEFONIA, false));
+			productos.add(new Producto(112, "Celular Iphone 11 ", 783990, OrigenFab.CHINA, Categoria.TELEFONIA, true));
+			productos.add(new Producto(113, "Taladro Einhell", 417953, OrigenFab.CHINA, Categoria.HERRAMIENTAS, true));
+			productos.add(new Producto(114, "Amoladora Philco ", 47999, OrigenFab.URUGUAY, Categoria.HERRAMIENTAS, true));
+			productos.add(new Producto(115, "Soldadora Sincrolamp", 150000, OrigenFab.BRASIL, Categoria.HERRAMIENTAS, false));
 		}
 	}
 
+	
+	public static void mostrarProdStock() {
+		Consumer<Producto> mostrarProd = (p) -> System.out.println(p);
+		System.out.println("====== Productos con stock =======");
+		productos.forEach(p -> {
+			if (p.isStock() == true) {
+				mostrarProd.accept(p);
+			}
+		});
+	}
+	public static void mostrarProdSinStock() {
+		Consumer<Producto> mostrarProd = (p) -> System.out.println(p);
+		Predicate<Producto> sinStock = stock -> stock.isStock() == false;
+		List<Producto> prod = new ArrayList<>();
+		System.out.println("====== Productos sin stock =======");
+		prod = productos.stream().filter(sinStock).collect(Collectors.toList());
+		prod.forEach(mostrarProd);
+	}
+	public static void incrementar() {
+		List<Producto> productosIncrementados = new ArrayList<>();
+		Consumer<Producto> mostrarProd = (Producto p) -> System.out.println(p);
+		Function<Producto, Producto> increment20 = (prod) -> { 
+				double p = prod.getPrecioUnit()*1.2;
+				prod.setPrecioUnit(p);
+				return prod;};
+		productosIncrementados = productos.stream().map(increment20).collect(Collectors.toList());
+		productosIncrementados.forEach(mostrarProd);
+	}
+	public static void mostrarProdElectroHogar() {
+		Consumer<Producto> mostrarProd = (p) -> System.out.println(p);
+		Predicate<Producto> StockElecHogar = stock -> stock.isStock() == true && stock.getCategoria().equals(Categoria.ELECTROHOGAR);
+		List<Producto> prod = new ArrayList<>();
+		System.out.println("====== Productos ElectroHogar con stock =======");
+		prod = productos.stream().filter(StockElecHogar).collect(Collectors.toList());
+		prod.forEach(mostrarProd);
+	}
+	public static void ordenarProd() {
+		System.out.println("====== Productos ordenados por precio =======");
+		productos.sort(Comparator.comparing(Producto::getPrecioUnit).reversed());
+		Consumer<Producto> mostrarProd = (p) -> System.out.println(p);
+		productos.forEach(mostrarProd);
+	}
+	public static void mostarNombresMayus() {
+		List<Producto> productosMayus = new ArrayList<>();
+		Consumer<Producto> mostrarProd = (Producto p) -> System.out.println(p);
+		Function<Producto, Producto> mayuscula = (prod) -> { 
+				prod.setDescripcion(prod.getDescripcion().toUpperCase());
+				return prod;};
+		productosMayus = productos.stream().map(mayuscula).collect(Collectors.toList());
+		productosMayus.forEach(mostrarProd);
+	}
 }
